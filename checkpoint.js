@@ -43,8 +43,24 @@ const {
 // allí la recursión
 
 var objContains = function(obj, prop, value){
- 
+  
+
+  for(var propiedad in obj){
+
+    if(prop === propiedad && obj.prop === value ){
+    return true;
+  }
+
+    if(typeof propiedad === 'object') {
+     return objContains(propiedad , prop , value );
+     
+  }
 }
+return false;
+  
+  }
+  
+
 
 
 // EJERCICIO 2
@@ -58,7 +74,19 @@ var objContains = function(obj, prop, value){
 // [Para más información del método: https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array/isArray]
 
 var countArray = function(array){
-  
+
+
+  let suma = 0;
+  array.forEach(function (element) {
+    if(Array.isArray(element)) {
+     suma = suma + countArray(element);
+    } 
+    else {
+     suma = suma + element;
+    }
+  })
+  return suma;
+
 }
 
 // ---------------------
@@ -78,7 +106,13 @@ var countArray = function(array){
 //    lista.size(); --> 3
 
 LinkedList.prototype.size = function(){
- 
+  var contador = 0; 
+  var current = this.head; 
+    while (current != null) { 
+        contador++; 
+        current = current.next; 
+    }
+    return contador;
 }
 
 
@@ -98,9 +132,35 @@ LinkedList.prototype.size = function(){
 //    lista.addInPos(2, 3); --> Debería devolver false ya que no es posible agregar en la posición 2
 //    sin antes tener cargada la posición 0 y 1.
 
-LinkedList.prototype.addInPos = function(pos, value){
+LinkedList.prototype.addInPos = function(indice, value){
   
-}
+      if (indice > 0 && indice > this.size) 
+          return false; 
+      else { 
+        
+          var node = new Node(value); 
+          var actual, prev; 
+    
+          actual = this.head; 
+    
+              actual = this.head; 
+              var contador = 0; 
+    
+             
+              while (contador < indice) { 
+                  contador++; 
+                  prev = actual; 
+                  actual = actual.next; 
+              }
+    
+              node.next = actual; 
+              prev.next = node; 
+          } 
+          this.size++; 
+      } 
+    
+  
+
 
 // EJERCICIO 5
 // Implementar el método reverse dentro del prototype de LinkedList que invierta el orden de la lista
@@ -110,6 +170,23 @@ LinkedList.prototype.addInPos = function(pos, value){
 //    Lista nueva luego de aplicar el reverse: Head --> 13 --> 10 --> 4 --> 1 --> null
 
 LinkedList.prototype.reverse = function(){
+  let nodo = head,
+      previous,
+      tmp;
+
+  while (nodo) {
+    // save next before we overwrite node.next!
+    tmp = nodo.next;
+
+    // reverse pointer
+    nodo.next = previous;
+
+    // step forward in the list
+    previous = nodo;
+    nodo = tmp;
+  }
+
+  return previous;
  
 }
 
@@ -141,7 +218,34 @@ LinkedList.prototype.reverse = function(){
 //    - mazoUserB = [6,9,10,3,6,4]
 
 var cardGame = function(mazoUserA, mazoUserB){
+while (mazoUserA.size() != 0 && mazoUserB.size() != 0 ){
+      if (mazoUserA[0] > mazoUserB[0]){
+        mazoUserA.dequeue();
+        mazoUserA.enqueue(mazoUserA[0]);
+        mazoUserB.dequeue();
+        mazoUserA.enqueue(mazoUserB[0]);
 
+      }
+      else if (mazoUserA[0] < mazoUserB[0]) {
+        mazoUserB.dequeue();
+        mazoUserB.enqueue(mazoUserA[0]);
+        mazoUserA.dequeue();
+        mazoUserB.enqueue(mazoUserB[0]);
+      }
+      else if (mazoUserA[0] === mazoUserB[0]){
+        mazoUserA.dequeue();
+        mazoUserB.dequeue();
+      }
+}
+if (mazoUserA.size() === 0 && mazoUserB.size()>0){
+  return "B wins!"
+}
+else if ( mazoUserB.size() ===0 && mazoUserA.size()>0) {
+  return "A wins!"
+}
+else if (mazoUserB.size()===0 && mazoUserA.size() === 0 ){
+  return "Game tie!"
+}
 }
 
 // ---------------
@@ -217,7 +321,9 @@ var selectionSort = function(array) {
 //    sumaDiez(11); --> Devolverá 21 (Ya que 11 + 10 = 21)
 
 function closureSum(numFijo) {
- 
+  return function(y) {
+    return numFijo + y;
+  };
 }
 
 // -------------------
